@@ -30,7 +30,7 @@ class NSGA2:
         for ind in population:
             w, l, h, t = ind
 
-            # 1. Cost: volume * cost/m³
+            # 1. Cost: volume * cost/m3
             wall_area = 2 * (w + l) * h
             volume = wall_area * t
             cost = volume * self.cost_m3
@@ -40,11 +40,8 @@ class NSGA2:
                 cost_multiplier = 1.0 + (0.3 - t) * 3  # +60% pentru t=0.1
                 cost *= cost_multiplier
 
-            # Opțiune 1: Factor de stabilitate bazat pe raport de aspect
+            # 3. stability factor based on aspect ratio
             stability = (w * l * t) / (h ** 1.5)
-
-            # Opțiune 3: Simplu și intuitiv - minimizăm h/(w*t)
-            # stability = h / (w * t)
 
             # we want to minimize both: cost and instability
             obj.append([cost, -stability])  # negative stability = instability
@@ -78,7 +75,7 @@ class NSGA2:
             for j in range(len(population)):
                 if i == j:
                     continue
-                # minimizam ambele obiective
+                # minimize both objectives
                 if all(objectives[i] <= objectives[j]) and any(objectives[i] < objectives[j]):
                     dominated_solutions[i].append(j)
                 elif all(objectives[j] <= objectives[i]) and any(objectives[j] < objectives[i]):
